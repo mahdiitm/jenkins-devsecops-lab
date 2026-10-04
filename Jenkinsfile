@@ -67,32 +67,38 @@ pipeline {
                 '''
             }
         }
-        stage('Push Image') {
-            steps {
-                echo 'Pushing image to Docker Hub...'
-        
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub-credentials',
-                        usernameVariable: 'DOCKERHUB_USER',
-                        passwordVariable: 'DOCKERHUB_TOKEN'
-                    )
-                ]) {
-                    sh '''
-                        echo "$DOCKERHUB_TOKEN" | docker login \
-                            -u "$DOCKERHUB_USER" \
-                            --password-stdin
-        
-                        docker tag jenkins-devsecops-lab:${BUILD_NUMBER} \
-                            ${DOCKERHUB_USER}/jenkins-devsecops-lab:${BUILD_NUMBER}
-        
-                        docker push \
-                            ${DOCKERHUB_USER}/jenkins-devsecops-lab:${BUILD_NUMBER}
-        
-                        docker logout
-                    '''
-                }
-            }
+       stage('Push Image') {
+    steps {
+        echo 'Pushing Docker image to Docker Hub...'
+
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'dockerhub-credentials',
+                usernameVariable: 'DOCKERHUB_USER',
+                passwordVariable: 'DOCKERHUB_TOKEN'
+            )
+        ]) {
+            sh '''
+                echo "$DOCKERHUB_TOKEN" | docker login \
+                    -u "$DOCKERHUB_USER" \
+                    --password-stdin
+
+                docker tag jenkins-devsecops-lab:${BUILD_NUMBER} \
+                    ${DOCKERHUB_USER}/jenkins-devsecops-lab:${BUILD_NUMBER}
+
+                docker tag jenkins-devsecops-lab:${BUILD_NUMBER} \
+                    ${DOCKERHUB_USER}/jenkins-devsecops-lab:latest
+
+                docker push \
+                    ${DOCKERHUB_USER}/jenkins-devsecops-lab:${BUILD_NUMBER}
+
+                docker push \
+                    ${DOCKERHUB_USER}/jenkins-devsecops-lab:latest
+
+                docker logout
+            '''
         }
+    }
+}
             }
         }
