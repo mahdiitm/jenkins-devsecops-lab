@@ -38,6 +38,7 @@ pipeline {
                   --scanners vuln \
                   --config /dev/null \
                   --db-repository ghcr.io/aquasecurity/trivy-db \
+                  --exit-code 1 --severity HIGH,CRITICAL \
                   .
                 '''
     }
