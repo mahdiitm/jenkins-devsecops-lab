@@ -129,5 +129,19 @@ pipeline {
                 }
             }
         }
+        stage('Post-Deployment Test') {
+            steps {
+                echo 'Checking deployed application...'
+        
+                sh '''
+                    sleep 10
+        
+                    curl --fail --silent \
+                        http://localhost:8000/health
+        
+                    echo "Application health check passed."
+                '''
+            }
+        }
             }
         }
