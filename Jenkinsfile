@@ -27,7 +27,7 @@ pipeline {
         stage('SAST - Semgrep') {
             steps {
                 echo 'Running Semgrep security scan...'
-                sh '~/semgrep-env/bin/semgrep scan --config auto'
+                sh '/home/code/.semgrep-env/bin/semgrep scan --config auto'
             }
         }
     }
