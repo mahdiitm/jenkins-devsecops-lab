@@ -56,5 +56,16 @@ pipeline {
                 sh 'docker build -t jenkins-devsecops-lab:${BUILD_NUMBER} .'
             }
         }
+        stage('Container Scan - Trivy') {
+            steps {
+                echo 'Scanning Docker image for vulnerabilities...'
+                sh '''
+                    trivy image \
+                      --severity HIGH,CRITICAL \
+                      --exit-code 1 \
+                      jenkins-devsecops-lab:${BUILD_NUMBER}
+                '''
+            }
+        }
             }
         }
