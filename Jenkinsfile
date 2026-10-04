@@ -13,14 +13,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building application...'
-                sh 'python3 -m py_compile app.py'
+                sh '/opt/jenkins-tools/app-env/bin/python3 -m py_compile app.py'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'python3 -m pytest -v'
+                sh '/opt/jenkins-tools/app-env/bin/python3 -m pytest -v'
             }
         }
 
