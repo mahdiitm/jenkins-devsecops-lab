@@ -100,5 +100,34 @@ pipeline {
         }
     }
 }
+        stage('Deploy - Docker Compose') {
+            steps {
+                echo 'Deploying application with Docker Compose...'
+        
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKERHUB_USER',
+                        passwordVariable: 'DOCKERHUB_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        echo "$DOCKERHUB_TOKEN" | docker login \
+                            -u "$DOCKERHUB_USER" \
+                            --password-stdin
+        
+                        export DOCKERHUB_USER="$DOCKERHUB_USER"
+                        export IMAGE_TAG="${BUILD_NUMBER}"
+        
+                        docker compose pull
+                        docker compose up -d
+        
+                        docker compose ps
+        
+                        docker logout
+                    '''
+                }
+            }
+        }
             }
         }
