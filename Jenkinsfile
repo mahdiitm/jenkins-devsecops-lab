@@ -44,10 +44,16 @@ pipeline {
                 '''
             }
         }
-                stage('Secret Scan - Gitleaks') {
+        stage('Secret Scan - Gitleaks') {
             steps {
                 echo 'Scanning for secrets...'
                 sh 'gitleaks detect --source . --no-banner --redact'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                echo 'Building Docker image...'
+                sh 'docker build -t jenkins-devsecops-lab:${BUILD_NUMBER} .'
             }
         }
             }
