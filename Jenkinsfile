@@ -30,5 +30,17 @@ pipeline {
                 sh '/opt/jenkins-tools/semgrep-env/bin/semgrep scan --config auto --error'
             }
         }
+        stage('SCA - Trivy') {
+            steps {
+                echo 'Running Trivy dependency scan...'
+                sh '''
+                trivy fs \
+                  --scanners vuln \
+                  --config /dev/null \
+                  --db-repository ghcr.io/aquasecurity/trivy-db \
+                  .
+                '''
+    }
+}
     }
 }
