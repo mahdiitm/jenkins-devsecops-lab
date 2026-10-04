@@ -23,5 +23,12 @@ pipeline {
                 sh 'python3 -m pytest -v'
             }
         }
+
+        stage('SAST - Semgrep') {
+            steps {
+                echo 'Running Semgrep security scan...'
+                sh '~/semgrep-env/bin/semgrep scan --config auto'
+            }
+        }
     }
 }
