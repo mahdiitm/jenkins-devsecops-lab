@@ -27,7 +27,7 @@ pipeline {
         stage('SAST - Semgrep') {
             steps {
                 echo 'Running Semgrep security scan...'
-                sh '/home/code/.semgrep-env/bin/semgrep scan --config auto'
+                sh '/opt/jenkins-tools/semgrep-env/bin/semgrep scan --config auto'
             }
         }
     }
