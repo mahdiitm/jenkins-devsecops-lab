@@ -42,7 +42,13 @@ pipeline {
                   --exit-code 1 \
                   .
                 '''
-    }
-}
-    }
-}
+            }
+        }
+                stage('Secret Scan - Gitleaks') {
+            steps {
+                echo 'Scanning for secrets...'
+                sh 'gitleaks detect --source . --no-banner --redact'
+            }
+        }
+            }
+        }
