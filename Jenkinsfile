@@ -129,17 +129,41 @@ pipeline {
                 }
             }
         }
-        stage('Post-Deployment Test') {
+       stage('Post-Deployment Test') {
             steps {
-                echo 'Checking deployed application...'
+                echo 'Waiting for application to become healthy...'
         
                 sh '''
-                    sleep 10
+                    for i in $(seq 1 12); do
+                        STATUS=$(docker inspect \
+                            --format='{{.State.Health.Status}}' \
+                            devsecops-app 2>/dev/null || true)
         
-                    curl --fail --silent \
-                        http://localhost:8000/health
+                        echo "Health status: $STATUS"
         
-                    echo "Application health check passed."
+                        if [ "$STATUS" = "healthy" ]; then
+                            echo "Application is healthy."
+                            exit 0
+                        fi
+        
+                        if [ "$STATUS" = "unhealthy" ]; then
+                            echo "Application is unhealthy."
+                            docker logs devsecops-app
+                            exit 1
+                        fi
+        
+                        sleep 5
+                    done
+        
+                    echo "Application did not become healthy within 60 seconds."
+                    docker logs devsecops-app
+                    exit 1
+                '''
+        
+                sh '''
+                    curl --fail --silent http://localhost:8080/health
+                    echo
+                    echo "External health check passed."
                 '''
             }
         }
