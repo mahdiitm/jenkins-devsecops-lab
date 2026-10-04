@@ -1,7 +1,14 @@
 services:
   app:
-    image: ${DOCKERHUB_USER}/jenkins-devsecops-lab:latest
+    image: ${DOCKERHUB_USER}/jenkins-devsecops-lab:${IMAGE_TAG:-latest}
     container_name: devsecops-app
     ports:
       - "8000:8000"
     restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
