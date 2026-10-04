@@ -1,6 +1,6 @@
 services:
   app:
-    image: YOUR_DOCKERHUB_USERNAME/jenkins-devsecops-lab:latest
+    image: mytestk92/jenkins-devsecops-lab:latest
     container_name: devsecops-app
     ports:
       - "8080:8080"
