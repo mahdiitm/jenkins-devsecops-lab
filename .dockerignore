@@ -1,0 +1,10 @@
+.git
+.gitignore
+Jenkinsfile
+test_app.py
+.pytest_cache
+__pycache__
+*.pyc
+.env
+*.key
+*.pem
